@@ -1,12 +1,12 @@
 {
-  "name": "Spiagge Sud Sicilia",
-  "short_name": "Spiagge Sicilia",
+  "name": "Sicily Shores - Spiagge Sud Sicilia",
+  "short_name": "Sicily Shores",
   "description": "Mappa mobile delle spiagge del sud della Sicilia con meteo, preferiti, indicazioni e consigli per scegliere dove andare oggi.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#fbf6ec",
-  "theme_color": "#0d6c93",
+  "background_color": "#f7f9ff",
+  "theme_color": "#0D6C93",
   "orientation": "portrait",
   "icons": [
     {

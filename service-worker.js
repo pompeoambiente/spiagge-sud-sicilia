@@ -1,4 +1,4 @@
-const CACHE_NAME = "spiagge-sud-sicilia-v6";
+const CACHE_NAME = "sicily-shores-v1";
 
 const STATIC_ASSETS = [
   "./",
@@ -27,6 +27,10 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
+
+  // Only handle same-origin requests; let CDN/API calls go straight to network.
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
 
   event.respondWith(
     caches.match(event.request).then(cached => {
