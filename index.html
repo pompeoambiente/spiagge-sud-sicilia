@@ -21,221 +21,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{--ink:#10242e;--paper:#fbf6ec;--card:#fff;--line:#e7ddc9;--accent:#e0683c;--accent-2:#1fa0a8;--sea:#0d83b8;--shadow:0 14px 40px -18px rgba(7,59,82,.45);--sidebar:380px}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%;font-family:"Hanken Grotesk",system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;overflow:hidden}
-.app{display:grid;grid-template-columns:var(--sidebar) 1fr;height:100vh;height:100dvh}
-#map{height:100vh;height:100dvh;z-index:1;background:radial-gradient(120% 120% at 30% 0%,#bfe6f2 0%,#7ec6e0 45%,#3f9ec9 100%)}
-.leaflet-container{background:transparent !important}
-
-.sidebar{height:100vh;height:100dvh;background:var(--paper);display:flex;flex-direction:column;border-right:1px solid var(--line);position:relative;z-index:5;box-shadow:8px 0 30px -20px rgba(0,0,0,.4)}
-.grip{display:none}
-.shead{padding:16px 18px 12px;background:linear-gradient(180deg,#0a4f6e,#0d6c93);color:#fff}
-.shead .row{display:flex;align-items:center;gap:11px}
-.mark{font-size:22px;background:#fff;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;transform:rotate(-4deg);box-shadow:0 6px 14px -6px rgba(0,0,0,.5)}
-.shead h1{font-family:"Fraunces",serif;font-weight:900;font-size:21px;margin:0;line-height:1;letter-spacing:-.02em}
-.shead h1 em{font-style:italic;color:#ffd9a0;font-weight:500}
-.shead p{margin:7px 0 0;font-size:12px;color:#cdeeff}
-.search{display:flex;align-items:center;gap:9px;background:#fff;margin:12px 14px 0;border-radius:13px;padding:12px 14px;box-shadow:var(--shadow)}
-.search svg{opacity:.45;flex:none}
-.search input{border:0;outline:0;flex:1;font:inherit;font-size:16px;background:transparent;min-width:0}
-.search .x{border:0;background:#eee;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:12px;line-height:1;color:#666;display:none;flex:none}
-.search .x.show{display:block}
-.filters{padding:10px 14px 4px;border-bottom:1px solid var(--line)}
-.chiprow{display:flex;gap:7px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.chiprow::-webkit-scrollbar{display:none}
-.chiprow .lab{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9a9480;align-self:center;white-space:nowrap;flex:none}
-.chip{flex:none;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;color:#4a5d63;white-space:nowrap;transition:.15s}
-.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
-.chip.prov.on{background:var(--sea);border-color:var(--sea)}
-.chip.blu.on{background:#1f6fb8;border-color:#1f6fb8}
-.scroller{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
-.countbar{padding:11px 18px 4px;font-size:12.5px;color:#7a7460;font-weight:600}
-.countbar b{color:var(--accent)}
-.row-item{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);cursor:pointer;align-items:center}
-.row-item.sel{background:#fff;box-shadow:inset 4px 0 0 var(--accent)}
-.thumb{width:80px;height:66px;border-radius:11px;flex:none;position:relative;overflow:hidden;background:#bfe6f2}
-.thumb svg,.dhero svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.thumb img.ph,.dhero img.ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.ri-body{min-width:0;flex:1}
-.ri-body h3{font-family:"Fraunces",serif;font-weight:600;font-size:16px;margin:0;line-height:1.05;letter-spacing:-.01em}
-.ri-loc{font-size:12px;color:#8a8470;font-weight:600;margin:2px 0 5px}
-.mini{display:flex;gap:5px;flex-wrap:wrap}
-.minit{font-size:10px;font-weight:700;background:#f1ece0;border-radius:6px;padding:2px 6px;color:#5a6}
-.minit.bb{background:#1f6fb8;color:#fff}.minit.ris{background:#1d8a52;color:#fff}
-
-.detail{display:none;flex-direction:column;height:100%;min-height:0}
-.detail.open{display:flex}
-.app.detailing .scroller .listing{display:none}
-.dback{display:flex;align-items:center;gap:8px;padding:13px 14px;font-weight:700;font-size:14px;cursor:pointer;border-bottom:1px solid var(--line);background:var(--paper);flex:none}
-.dscroll{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
-.dhero{height:190px;position:relative;overflow:hidden;background:#bfe6f2}
-.dhero .tags{position:absolute;left:12px;bottom:12px;display:flex;gap:6px;flex-wrap:wrap;z-index:3}
-.dhero .credit{position:absolute;right:8px;bottom:6px;z-index:3;font-size:9px;color:#fff;background:rgba(0,0,0,.4);padding:2px 6px;border-radius:5px;text-decoration:none}
-.dhero .shade{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.35) 100%);pointer-events:none}
-.tag{font-size:11px;font-weight:700;padding:4px 9px;border-radius:7px;background:rgba(255,255,255,.92);color:#0a4f6e}
-.tag.bb{background:#1f6fb8;color:#fff}.tag.ris{background:#1d8a52;color:#fff}
-.dbody{padding:16px 18px 30px}
-.dbody h2{font-family:"Fraunces",serif;font-weight:900;font-size:26px;margin:0;letter-spacing:-.02em;line-height:1}
-.dloc{font-size:13px;color:#8a8470;font-weight:600;margin:6px 0 12px}
-.ddesc{font-size:15px;line-height:1.55;color:#2b3d43;margin:0 0 16px}
-.specs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:13px;overflow:hidden}
-.spec{background:#fff;padding:10px 13px}
-.spec .k{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#9a9480;font-weight:700}
-.spec .v{font-size:14px;font-weight:600;margin-top:2px}
-.drow{margin-top:15px}
-.drow .lab{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9a9480}
-.drow .feats{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px}
-.feat{font-size:11.5px;font-weight:600;color:#456;background:#f1ece0;border-radius:7px;padding:4px 9px}
-.wiki{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px 15px;display:none}
-.wiki.show{display:block}
-.wiki h4{margin:0 0 6px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#9a9480}
-.wiki p{margin:0;font-size:14px;line-height:1.55;color:#33424a}
-.wiki a{color:var(--sea);font-weight:700;font-size:12.5px;text-decoration:none;display:inline-block;margin-top:8px}
-.wikiload{margin-top:14px;font-size:12.5px;color:#9a9480}
-.actions{display:flex;gap:9px;margin-top:20px;flex-wrap:wrap}
-.act{flex:1;min-width:104px;text-align:center;text-decoration:none;font-weight:700;font-size:13.5px;padding:13px 12px;border-radius:12px;font-family:inherit;border:0;cursor:pointer}
-.act.primary{background:var(--accent);color:#fff}
-.act.sec{background:var(--ink);color:#fff}
-.act.ter{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
-
-/* top-right map controls (no overlap with zoom top-left) */
-.topctl{position:absolute;top:12px;right:12px;z-index:1000;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
-.ctl{background:#fff;border-radius:11px;box-shadow:0 6px 18px -8px rgba(0,0,0,.45);overflow:hidden;display:flex;font-weight:700;font-size:12.5px;color:#0a4f6e}
-.ctl.layers div{padding:8px 11px;cursor:pointer}
-.ctl.layers div.on{background:var(--ink);color:#fff}
-.ctl.jump{padding:9px 12px;cursor:pointer;border:0;font:inherit;font-weight:700}
-.ctl.jump:active{background:var(--ink);color:#fff}
-.legend{position:absolute;left:12px;bottom:16px;z-index:1000;background:rgba(255,255,255,.94);border-radius:11px;padding:9px 12px;font-size:11.5px;box-shadow:0 6px 18px -8px rgba(0,0,0,.4);display:flex;flex-direction:column;gap:5px}
-.legend i{display:inline-block;width:11px;height:11px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);margin-right:7px;vertical-align:middle}
-.pin{width:18px;height:18px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.6)}
-.pin.sel{width:27px;height:27px;border-width:3px}
-.leaflet-popup-content{font-family:"Hanken Grotesk",sans-serif;margin:9px 11px}
-.leaflet-popup-content h4{font-family:"Fraunces",serif;margin:0 0 2px;font-size:15px}
-.leaflet-popup-content .pp{font-size:11px;color:#888;margin:0 0 7px}
-.leaflet-popup-content button{border:0;background:var(--accent);color:#fff;padding:7px 12px;border-radius:8px;font:inherit;font-weight:700;font-size:12px;cursor:pointer}
-
-@media(max-width:860px){
-  .app{grid-template-columns:1fr}
-  #map{position:fixed;inset:0;height:100vh;height:100dvh}
-  .sidebar{position:fixed;left:0;right:0;bottom:0;top:auto;height:87vh;height:87dvh;border-right:0;border-top-left-radius:22px;border-top-right-radius:22px;transition:transform .3s cubic-bezier(.4,0,.2,1);will-change:transform;z-index:1200;box-shadow:0 -12px 44px -10px rgba(0,0,0,.5)}
-  .shead{display:none}
-  .grip{display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 0 7px;cursor:pointer;flex:none;touch-action:none;user-select:none}
-  .grip .handle{width:44px;height:5px;border-radius:3px;background:#cdbf9f}
-  .grip .gtxt{font-size:12.5px;font-weight:700;color:#9a8d6e}
-  .search{margin-top:2px}
-  .legend{display:none}
-  .topctl{top:10px;right:10px}
-}
-@media(min-width:861px){.sidebar{transform:none !important}}
-.gallery{display:flex;gap:7px;overflow-x:auto;padding:10px 14px 2px;scrollbar-width:none}
-.gallery::-webkit-scrollbar{display:none}
-.gallery img{height:74px;width:100px;object-fit:cover;border-radius:9px;flex:none;cursor:pointer;border:2px solid transparent;background:#dfeef5}
-.gallery img.on{border-color:var(--accent)}
-.galcap{display:none;padding:2px 14px 2px;font-size:11.5px;color:#9a9480;font-weight:600;line-height:1.35}
-.wx{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 14px}
-.wxc{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:8px 12px;font-size:13px;font-weight:600;color:#33424a}
-.wxc b{font-size:15px;color:var(--ink)}
-.wxmuted{color:#9a9480;font-size:12.5px;font-weight:600}
-.near{margin-top:16px}
-.near .lab{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9a9480}
-.near .list{margin-top:8px;display:flex;flex-direction:column;gap:6px}
-.near a.poi{display:flex;justify-content:space-between;gap:10px;text-decoration:none;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13.5px;font-weight:600}
-.near a.poi .t{font-size:10.5px;color:#fff;background:var(--accent-2);border-radius:6px;padding:3px 8px;font-weight:700;align-self:center;white-space:nowrap}
-.near a.poi .t.lido{background:#1f6fb8}
-.near .links{display:flex;gap:8px;margin-top:9px}
-.near .links a{flex:1;text-align:center;text-decoration:none;font-weight:700;font-size:12.5px;padding:11px;border-radius:11px;background:#f1ece0;color:var(--ink)}
-.placehdr{padding:11px 18px 5px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7a3cc0}
-.placerow{padding:11px 18px;border-bottom:1px solid var(--line);font-size:14px;font-weight:600;cursor:pointer;display:flex;gap:9px;align-items:flex-start;line-height:1.3}
-.placerow:before{content:"📍";flex:none}
-.placerow:hover{background:#fff}
-.placebusy{padding:10px 18px;font-size:12.5px;color:#9a9480;font-weight:600}
-.tips{margin:9px 0 0;padding-left:20px;color:#33424a;font-size:13.5px;line-height:1.5}
-.tips li{margin:4px 0}
-.tips b{color:var(--ink)}
-.fscore{font-size:17px;color:#e0a72f;margin:5px 0 9px;letter-spacing:2px}
-.fscore span{font-size:12.5px;color:#6a6450;font-weight:700;margin-left:8px;letter-spacing:normal}
-.feat.ok{background:#e3f3e6;color:#1d7a3e}
-.feat.no{background:#f6e7e2;color:#b25a3e}
-.tag.green{background:#1d8a52;color:#fff}
-.near a.poi .t.kid{background:#1d8a52}
-.favh{position:absolute;top:12px;left:12px;z-index:4;border:0;background:rgba(255,255,255,.94);width:42px;height:42px;border-radius:50%;font-size:21px;line-height:1;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3)}
-.row-item{position:relative}
-.rowfav{position:absolute;top:8px;right:8px;border:0;background:transparent;font-size:19px;cursor:pointer;padding:5px;line-height:1}
-.wxc.warn{background:#fdf0e9;border-color:#f1c4ad;color:#b25a2e}
-.cmodal{position:fixed;inset:0;z-index:3000;background:rgba(7,42,55,.55);display:none;align-items:flex-end;justify-content:center}
-.cmodal.open{display:flex}
-.cbox{background:var(--paper);width:100%;max-width:560px;border-radius:20px 20px 0 0;max-height:84vh;display:flex;flex-direction:column;box-shadow:0 -10px 40px rgba(0,0,0,.4)}
-@media(min-width:600px){.cmodal{align-items:center;padding:20px}.cbox{border-radius:20px}}
-.chead{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-bottom:1px solid var(--line);font-family:"Fraunces",serif;font-size:18px}
-.chead button{border:0;background:#eee;width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer}
-.clist{overflow-y:auto;padding:6px 0}
-.citem{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line);font-size:15px;cursor:pointer}
-.citem input{width:22px;height:22px;flex:none;accent-color:var(--accent)}
-.citem.done{color:#9a9480;text-decoration:line-through}
-.cfoot{padding:12px 18px;border-top:1px solid var(--line)}
-.cfoot button{border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer;color:var(--ink)}
-
-
-/* --- Fix mobile UX + accessibilità --- */
-button,input{font:inherit}
-button{touch-action:manipulation;-webkit-tap-highlight-color:rgba(0,0,0,.08)}
-button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid rgba(31,160,168,.55);outline-offset:3px}
-.filtertools{display:flex;gap:7px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.filtertools::-webkit-scrollbar{display:none}
-.filterToggle{display:none}
-.chip.near.on{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
-.minit.dist{background:#e6f5fb;color:#0a6e9c}
-.quickfacts{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:0 0 14px}
-.qfact{background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 10px;font-size:12.5px;font-weight:700;color:#33424a;line-height:1.25}
-.qfact.ok{background:#e3f3e6;color:#1d7a3e;border-color:#c5e6cd}
-.qfact.no{background:#f6e7e2;color:#a64d34;border-color:#eac7bc}
-.userpin{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.35);font-size:18px;border:2px solid var(--accent-2)}
-@media(max-width:860px){
-  .filters{padding-top:8px}
-  .filterToggle{display:inline-flex;align-items:center;justify-content:center}
-  .filters:not(.expanded) .advanced{display:none}
-  .filtertools .chip,.chip,.act,.ctl.jump,#qx,#cclose,.rowfav,.favh{min-height:44px;min-width:44px}
-  .chip{padding:10px 14px;font-size:14px;display:inline-flex;align-items:center;justify-content:center}
-  .search{padding:10px 12px;border-radius:15px}
-  .search .x{width:36px;height:36px;font-size:14px}
-  .row-item{min-height:92px;padding:12px 58px 12px 16px}
-  .rowfav{top:10px;right:10px;border-radius:50%;background:rgba(255,255,255,.72)}
-  .favh{width:46px;height:46px}
-  .quickfacts{grid-template-columns:1fr}
-  .dbody{padding-bottom:96px}
-  .actions{position:sticky;bottom:0;margin:18px -18px -30px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(251,246,236,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);z-index:20;box-shadow:0 -10px 24px -20px rgba(0,0,0,.45)}
-  .act{display:flex;align-items:center;justify-content:center;min-height:46px;padding:12px 10px}
-  .act.primary{flex:1.55;font-size:14px}
-  .act.sec,.act.ter{flex:.95}
-  .topctl{gap:7px}
-  .ctl.layers div{padding:11px 12px}
-}
-
-/* --- PWA + consigli decisionali --- */
-.today-card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px;margin:4px 0 14px;box-shadow:var(--shadow)}
-.today-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.today-title{font-size:11px;font-weight:800;text-transform:uppercase;color:#8a8470;letter-spacing:.06em}
-.today-score{font-family:"Fraunces",serif;font-size:31px;font-weight:900;color:var(--accent);line-height:1;margin-top:3px;white-space:nowrap}
-.today-text{font-size:14px;font-weight:800;color:var(--ink);margin-top:4px}
-.today-note{font-size:13.5px;color:#33424a;line-height:1.45;margin-top:7px}
-.today-metrics{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.today-pill{font-size:11.5px;font-weight:700;background:#f1ece0;border-radius:999px;padding:5px 9px;color:#455}
-.today-pill.ok{background:#e3f3e6;color:#1d7a3e}.today-pill.warn{background:#fdf0e9;color:#b25a2e}.today-pill.bad{background:#f6e7e2;color:#a64d34}
-.act.share{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
-@media(max-width:860px){.today-score{font-size:28px}.actions{gap:8px}.act.share{flex:.95}}
-
-@media(prefers-reduced-motion:reduce){
-  *{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
-}
-
-</style>
+<link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <div class="app" id="app">
   <aside class="sidebar" id="sidebar">
-    <div class="grip" id="grip"><span class="handle"></span><span class="gtxt" id="gtxt">▲ Mostra elenco spiagge</span></div>
+    <div class="grip" id="grip">
+      <span class="handle"></span>
+      <div class="grip-header">
+        <span class="grip-icon">🏖️</span>
+        <span class="gtxt" id="gtxt">Mostra elenco spiagge</span>
+        <svg class="grip-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+      </div>
+    </div>
     <div class="scroller" id="scroller">
       <div class="shead"><div class="row"><div class="mark">🏖️</div><div>
         <h1>Spiagge del <em>Sud Sicilia</em></h1><p>Clicca un pin o una spiaggia per i dettagli</p></div></div></div>
@@ -263,6 +61,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid rgba(
       <div class="ctl layers" id="layerToggle"><div class="on" data-l="sat">🛰️ Satellite</div><div data-l="map">🗺️ Mappa</div></div>
       <button class="ctl jump" id="jSud">↔ Costa sud</button>
       <button class="ctl jump" id="jPel">🏝️ Pelagie</button>
+      <button class="ctl locate-btn" id="btnLocateFAB" type="button" aria-label="La mia posizione">🎯 Posizione</button>
     </div>
     <div class="legend">
       <div><i style="background:#e0683c"></i> Spiaggia</div>
@@ -363,7 +162,7 @@ function sceneSVG(b){
 const pinColor=b=>b.bb?"#1f6fb8":(b.ris?"#1d8a52":"#e0683c");
 
 /* ---------- MAPPA: satellite reale + fallback vettoriale ---------- */
-const map=L.map("map",{zoomControl:true,minZoom:7,maxZoom:18,attributionControl:true}).setView([36.92,14.3],8);
+const map=L.map("map",{zoomControl:!window.matchMedia("(max-width:860px)").matches,minZoom:7,maxZoom:18,attributionControl:true}).setView([36.92,14.3],8);
 map.attributionControl.setPrefix("");
 map.createPane("landfallback");
 map.getPane("landfallback").style.zIndex=150;            /* sotto le tile (200): visibile solo se il satellite non carica */
@@ -436,7 +235,7 @@ function setUserLocation(lat,lng){
   state.loc={lat,lng};state.near=true;
   if(btnNearMe){btnNearMe.classList.add("on");btnNearMe.setAttribute("aria-pressed","true");btnNearMe.textContent="📍 Vicine a me";}
   if(userMarker)userMarker.remove();
-  userMarker=L.marker([lat,lng],{icon:L.divIcon({className:"",html:'<div class="userpin">📍</div>',iconSize:[30,30],iconAnchor:[15,30]})}).addTo(map).bindPopup("La tua posizione");
+  userMarker=L.marker([lat,lng],{icon:L.divIcon({className:"",html:'<div class="userpin"></div>',iconSize:[18,18],iconAnchor:[9,9]})}).addTo(map).bindPopup("La tua posizione");
   renderList();map.flyTo([lat,lng],11,{duration:.7});if(isMobile())setSheet("half");
 }
 function requestNearMe(){
@@ -450,6 +249,8 @@ function requestNearMe(){
   );
 }
 if(btnNearMe){btnNearMe.setAttribute("aria-pressed","false");btnNearMe.onclick=requestNearMe;}
+const locateFAB = document.getElementById("btnLocateFAB");
+if(locateFAB){locateFAB.onclick=requestNearMe;}
 /* ---------- RICERCA LUOGHI (geocoding OpenStreetMap) ---------- */
 let geoTimer=null, placeMarker=null;
 async function geocode(q){try{const r=await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&accept-language=it&countrycodes=it&q="+encodeURIComponent(q),{headers:{accept:"application/json"}});if(!r.ok)return [];return await r.json();}catch(e){return [];}}
@@ -682,7 +483,7 @@ window.openDetail=function(i){
     <div class="gallery" id="gallery"></div>
     <div class="galcap" id="galcap">Foto della spiaggia (Wikimedia) · tocca per usarla come copertina. Di default la copertina è la vista satellitare; per altre foto usa “📷 Altre foto”.</div>
     <div class="dbody"><h2>${b.n}</h2><div class="dloc">📍 ${b.c} · Provincia di ${b.p}</div>
-    <div class="wx" id="wx"><span class="wxmuted">Meteo in tempo reale…</span></div>
+    <div class="wx" id="wx"><div class="skeleton skele-text" style="width: 140px; display: inline-block; margin-right: 6px;"></div><div class="skeleton skele-text" style="width: 120px; display: inline-block;"></div></div>
     <div id="today"></div>
     <div class="quickfacts">
       <span class="qfact ${fam.kid?'ok':'no'}">👶 ${fam.kid?'Buona con bimbi':'Meglio valutare con bimbi'}</span>
@@ -712,10 +513,10 @@ window.openDetail=function(i){
     <div class="drow"><div class="lab">Ideale per</div><div class="feats">${b.id.map(x=>`<span class="feat">${x}</span>`).join("")}</div></div>
     <div class="drow"><div class="lab">Servizi</div><div class="feats">${b.sv.map(x=>`<span class="feat">${x}</span>`).join("")}</div></div>
     <div class="drow"><div class="lab">ℹ️ Info utili</div><ul class="tips">${tips(b).map(x=>`<li>${x}</li>`).join("")}</ul></div>
-    <div class="near" id="near"><div class="lab">🍹 Bar e lidi nei paraggi</div><div class="list" id="nearlist"><span class="wxmuted">Cerco nei dintorni…</span></div>
+    <div class="near" id="near"><div class="lab">🍹 Bar e lidi nei paraggi</div><div class="list" id="nearlist"><div class="skeleton skele-card"></div><div class="skeleton skele-card"></div></div>
       <div class="links"><a href="${lidoLink}" target="_blank" rel="noopener">⛱️ Tutti i lidi</a><a href="${barLink}" target="_blank" rel="noopener">🍸 Tutti i bar</a></div></div>
-    <div class="near" id="nearkids"><div class="lab">👶 Utili con bambini</div><div class="list" id="kidslist"><span class="wxmuted">Cerco farmacia, parco giochi, bagni…</span></div></div>
-    <div class="wikiload" id="wikiload">Carico approfondimento…</div>
+    <div class="near" id="nearkids"><div class="lab">👶 Utili con bambini</div><div class="list" id="kidslist"><div class="skeleton skele-card"></div><div class="skeleton skele-card"></div></div></div>
+    <div class="wikiload" id="wikiload"><div class="skeleton skele-text"></div><div class="skeleton skele-text"></div><div class="skeleton skele-text short"></div></div>
     <div class="wiki" id="wikibox"><h4>📖 Approfondimento</h4><p id="wikitext"></p><a id="wikilink" href="#" target="_blank" rel="noopener">Continua su Wikipedia →</a></div>
     <div class="actions"><a class="act primary" href="${gmaps}" target="_blank" rel="noopener">🧭 Indicazioni</a>
       <a class="act sec" href="${photos}" target="_blank" rel="noopener">📷 Foto</a>
@@ -791,12 +592,58 @@ function setSheet(s){
   gtxt.textContent=sheetLabel(s);
 }
 let dragging=false,sY=0,baseT=0,moved=0;
+let lastTime=0, lastY=0, velocity=0;
 function curT(){const m=/translateY\(([-\d.]+)px\)/.exec(sidebar.style.transform);return m?parseFloat(m[1]):sheetT.peek;}
 function nearestSheet(t){return ["full","half","peek"].reduce((best,s)=>Math.abs(sheetT[s]-t)<Math.abs(sheetT[best]-t)?s:best,"peek");}
-grip.addEventListener("touchstart",e=>{if(!isMobile())return;dragging=true;moved=0;sY=e.touches[0].clientY;baseT=curT();sidebar.style.transition="none";},{passive:true});
-window.addEventListener("touchmove",e=>{if(!dragging)return;const dy=e.touches[0].clientY-sY;moved=Math.max(moved,Math.abs(dy));let t=Math.max(0,Math.min(sheetT.peek,baseT+dy));sidebar.style.transform=`translateY(${t}px)`;},{passive:true});
-window.addEventListener("touchend",()=>{if(!dragging)return;dragging=false;sidebar.style.transition="";setSheet(nearestSheet(curT()));});
-grip.addEventListener("click",()=>{if(!isMobile()||moved>6)return;const s=sidebar.dataset.state||"peek";setSheet(s==="peek"?"half":s==="half"?"full":"peek");});
+grip.addEventListener("touchstart",e=>{
+  if(!isMobile())return;
+  dragging=true;
+  moved=0;
+  sY=e.touches[0].clientY;
+  lastY=sY;
+  lastTime=Date.now();
+  baseT=curT();
+  sidebar.style.transition="none";
+},{passive:true});
+window.addEventListener("touchmove",e=>{
+  if(!dragging)return;
+  const cy=e.touches[0].clientY;
+  const dy=cy-sY;
+  const now=Date.now();
+  const dt=now-lastTime;
+  if(dt>0){
+    velocity=(cy-lastY)/dt;
+  }
+  lastY=cy;
+  lastTime=now;
+  moved=Math.max(moved,Math.abs(dy));
+  let t=Math.max(0,Math.min(sheetT.peek,baseT+dy));
+  sidebar.style.transform=`translateY(${t}px)`;
+},{passive:true});
+window.addEventListener("touchend",()=>{
+  if(!dragging)return;
+  dragging=false;
+  sidebar.style.transition="";
+  const currentTranslate=curT();
+  let targetState;
+  if(Math.abs(velocity)>0.45){
+    const isSwipingDown=velocity>0;
+    const currentState=sidebar.dataset.state||"peek";
+    if(isSwipingDown){
+      targetState=currentState==="full"?"half":"peek";
+    }else{
+      targetState=currentState==="peek"?"half":"full";
+    }
+  }else{
+    targetState=nearestSheet(currentTranslate);
+  }
+  setSheet(targetState);
+});
+grip.addEventListener("click",()=>{
+  if(!isMobile()||moved>6)return;
+  const s=sidebar.dataset.state||"peek";
+  setSheet(s==="peek"?"half":s==="half"?"full":"peek");
+});
 map.on("click",()=>{if(isMobile()&&!detail.classList.contains("open"))setSheet("peek");});
 document.getElementById("jSud").onclick=()=>map.flyTo([36.92,14.3],8,{duration:.7});
 document.getElementById("jPel").onclick=()=>map.flyTo([35.55,12.6],10,{duration:.7});

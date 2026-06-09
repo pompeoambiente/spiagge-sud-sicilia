@@ -3,6 +3,7 @@ const CACHE_NAME = "spiagge-sud-sicilia-v2";
 const STATIC_ASSETS = [
   "./",
   "./index.html",
+  "./style.css",
   "./manifest.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png"
