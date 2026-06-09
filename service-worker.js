@@ -1,4 +1,4 @@
-const CACHE_NAME = "spiagge-sud-sicilia-v2";
+const CACHE_NAME = "spiagge-sud-sicilia-v6";
 
 const STATIC_ASSETS = [
   "./",

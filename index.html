@@ -54,14 +54,19 @@
       </div>
       <div class="listing"><div id="placeResults"></div><div class="countbar"><b id="cnt">0</b> spiagge</div><div id="list"></div></div>
     </div>
-    <div class="detail" id="detail"><div class="dback" id="dback">← Torna all'elenco</div><div class="dscroll" id="dscroll"></div></div>
+    <div class="detail" id="detail"><div class="dback" id="dback"><svg width="9" height="16" viewBox="0 0 9 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 15 1 8l7-7"/></svg><span>Torna all'elenco</span></div><div class="dscroll" id="dscroll"></div></div>
   </aside>
   <div id="map">
     <div class="topctl">
-      <div class="ctl layers" id="layerToggle"><div class="on" data-l="sat">🛰️ Satellite</div><div data-l="map">🗺️ Mappa</div></div>
-      <button class="ctl jump" id="jSud">↔ Costa sud</button>
-      <button class="ctl jump" id="jPel">🏝️ Pelagie</button>
-      <button class="ctl locate-btn" id="btnLocateFAB" type="button" aria-label="La mia posizione">🎯 Posizione</button>
+      <button class="ctl-btn" id="btnLocateFAB" type="button" aria-label="La mia posizione">🧭</button>
+      <div class="ctl layers" id="layerToggle">
+        <div class="on" data-l="sat" aria-label="Satellite">🛰️</div>
+        <div data-l="map" aria-label="Mappa">🗺️</div>
+      </div>
+      <div class="jump-group">
+        <button class="ctl-btn jump" id="jSud" type="button">↔ Costa sud</button>
+        <button class="ctl-btn jump" id="jPel" type="button">🏝️ Pelagie</button>
+      </div>
     </div>
     <div class="legend">
       <div><i style="background:#e0683c"></i> Spiaggia</div>
@@ -296,7 +301,7 @@ function renderList(){
     const tags=[];if(b.bb)tags.push('<span class="minit bb">BB</span>');if(b.ris)tags.push('<span class="minit ris">Riserva</span>');
     const fam=familyInfo(b);const sh=shadeInfo(b);const distBadge=dist!=null?`<span class="minit dist">📍 ${fmtKm(dist)}</span>`:"";
     const el=document.createElement("div");el.className="row-item";el.dataset.i=i;
-    el.innerHTML=`<div class="thumb">${sceneSVG(b)}</div><div class="ri-body"><h3>${b.n}</h3><div class="ri-loc">${b.c} · ${b.p}</div><div class="mini"><span class="minit">${T[b.t]}</span>${distBadge}${tags.join("")}${sh.pineta?'<span class="minit" style="background:#e3f3e6;color:#1d7a3e">🌳 pineta</span>':''}${fam.kid?'<span class="minit" style="background:#e3f3e6;color:#1d7a3e">👶 ottima</span>':''}</div></div><button class="rowfav" data-i="${i}" type="button" aria-label="${isFav(b)?'Rimuovi dai preferiti':'Aggiungi ai preferiti'}">${isFav(b)?"❤️":"🤍"}</button>`;
+    el.innerHTML=`<div class="thumb">${sceneSVG(b)}</div><div class="ri-body"><h3>${b.n}</h3><div class="ri-loc">${b.c} · ${b.p}</div><div class="mini"><span class="minit">${T[b.t]}</span>${distBadge}${tags.join("")}${sh.pineta?'<span class="minit" style="background:#e3f3e6;color:#1d7a3e">🌳 pineta</span>':''}${fam.kid?'<span class="minit" style="background:#e3f3e6;color:#1d7a3e">👶 ottima</span>':''}</div></div><div class="ri-chevron"><svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m1 13 6-6-6-6"/></svg></div><button class="rowfav" data-i="${i}" type="button" aria-label="${isFav(b)?'Rimuovi dai preferiti':'Aggiungi ai preferiti'}">${isFav(b)?"❤️":"🤍"}</button>`;
     el.onclick=()=>openDetail(i);
     el.querySelector(".rowfav").onclick=(ev)=>{ev.stopPropagation();toggleFav(b);renderList();};
     listEl.appendChild(el);
@@ -482,46 +487,65 @@ window.openDetail=function(i){
   dscroll.innerHTML=`<div class="dhero" id="dhero">${sceneSVG(b)}<div class="shade"></div><button class="favh" id="favh" type="button" aria-label="${isFav(b)?'Rimuovi dai preferiti':'Aggiungi ai preferiti'}">${isFav(b)?'❤️':'🤍'}</button><div class="tags">${tags.join("")}</div></div>
     <div class="gallery" id="gallery"></div>
     <div class="galcap" id="galcap">Foto della spiaggia (Wikimedia) · tocca per usarla come copertina. Di default la copertina è la vista satellitare; per altre foto usa “📷 Altre foto”.</div>
-    <div class="dbody"><h2>${b.n}</h2><div class="dloc">📍 ${b.c} · Provincia di ${b.p}</div>
-    <div class="wx" id="wx"><div class="skeleton skele-text" style="width: 140px; display: inline-block; margin-right: 6px;"></div><div class="skeleton skele-text" style="width: 120px; display: inline-block;"></div></div>
-    <div id="today"></div>
-    <div class="quickfacts">
-      <span class="qfact ${fam.kid?'ok':'no'}">👶 ${fam.kid?'Buona con bimbi':'Meglio valutare con bimbi'}</span>
-      <span class="qfact ${park==='Sì'?'ok':'no'}">🅿️ Parcheggio: ${park}</span>
-      <span class="qfact ${lidi==='Sì'?'ok':'no'}">⛱️ Lidi: ${lidi}</span>
-      <span class="qfact">${dist!=null?'📍 '+fmtKm(dist):'📍 Distanza: attiva posizione'}</span>
-    </div>
-    <p class="ddesc">${b.d}</p>
-    <div class="specs">
-      <div class="spec"><div class="k">Tipo di costa</div><div class="v">${T[b.t]}</div></div>
-      <div class="spec"><div class="k">Mare</div><div class="v">${b.mare}</div></div>
-      <div class="spec"><div class="k">Accesso</div><div class="v">${b.acc}</div></div>
-      <div class="spec"><div class="k">Affollamento</div><div class="v">${b.aff}</div></div>
-      <div class="spec"><div class="k">Ombra</div><div class="v">${sh.type}</div></div>
-      <div class="spec"><div class="k">Parcheggio</div><div class="v">${park}</div></div>
-    </div>
-    <div class="drow"><div class="lab">👶 A misura di bimbi</div>
-      <div class="fscore">${"★".repeat(fam.score)}${"☆".repeat(5-fam.score)}<span>${fam.kid?"consigliata con bambini piccoli":"valuta in base all'età"}</span></div>
-      <div class="feats">
-        <span class="feat ${fam.sand?'ok':'no'}">${fam.sand?'✓':'✗'} Sabbia</span>
-        <span class="feat ${fam.shallow?'ok':'no'}">${fam.shallow?'✓':'✗'} Acqua bassa/calma</span>
-        <span class="feat ${fam.shade?'ok':'no'}">${fam.shade?'✓':'✗'} Ombra</span>
-        <span class="feat ${fam.stroller?'ok':'no'}">${fam.stroller?'✓':'✗'} Passeggino</span>
-        <span class="feat ${fam.park?'ok':'no'}">${fam.park?'✓':'✗'} Parcheggio vicino</span>
+    <div class="dbody">
+      <div class="dcard">
+        <h2>${b.n}</h2><div class="dloc">📍 ${b.c} · Provincia di ${b.p}</div>
+        <div class="wx" id="wx"><div class="skeleton skele-text" style="width: 140px; display: inline-block; margin-right: 6px;"></div><div class="skeleton skele-text" style="width: 120px; display: inline-block;"></div></div>
+        <div id="today"></div>
       </div>
-    </div>
-    <div class="drow"><div class="lab">Ideale per</div><div class="feats">${b.id.map(x=>`<span class="feat">${x}</span>`).join("")}</div></div>
-    <div class="drow"><div class="lab">Servizi</div><div class="feats">${b.sv.map(x=>`<span class="feat">${x}</span>`).join("")}</div></div>
-    <div class="drow"><div class="lab">ℹ️ Info utili</div><ul class="tips">${tips(b).map(x=>`<li>${x}</li>`).join("")}</ul></div>
-    <div class="near" id="near"><div class="lab">🍹 Bar e lidi nei paraggi</div><div class="list" id="nearlist"><div class="skeleton skele-card"></div><div class="skeleton skele-card"></div></div>
-      <div class="links"><a href="${lidoLink}" target="_blank" rel="noopener">⛱️ Tutti i lidi</a><a href="${barLink}" target="_blank" rel="noopener">🍸 Tutti i bar</a></div></div>
-    <div class="near" id="nearkids"><div class="lab">👶 Utili con bambini</div><div class="list" id="kidslist"><div class="skeleton skele-card"></div><div class="skeleton skele-card"></div></div></div>
-    <div class="wikiload" id="wikiload"><div class="skeleton skele-text"></div><div class="skeleton skele-text"></div><div class="skeleton skele-text short"></div></div>
-    <div class="wiki" id="wikibox"><h4>📖 Approfondimento</h4><p id="wikitext"></p><a id="wikilink" href="#" target="_blank" rel="noopener">Continua su Wikipedia →</a></div>
-    <div class="actions"><a class="act primary" href="${gmaps}" target="_blank" rel="noopener">🧭 Indicazioni</a>
-      <a class="act sec" href="${photos}" target="_blank" rel="noopener">📷 Foto</a>
-      <a class="act ter" href="${sat}" target="_blank" rel="noopener">🛰️ Satellite</a>
-      <button class="act share" id="shareBeachBtn" type="button">🔗 Condividi</button></div></div>`;
+      
+      <div class="dcard">
+        <div class="quickfacts">
+          <span class="qfact ${fam.kid?'ok':'no'}">👶 ${fam.kid?'Buona con bimbi':'Meglio valutare con bimbi'}</span>
+          <span class="qfact ${park==='Sì'?'ok':'no'}">🅿️ Parcheggio: ${park}</span>
+          <span class="qfact ${lidi==='Sì'?'ok':'no'}">⛱️ Lidi: ${lidi}</span>
+          <span class="qfact">${dist!=null?'📍 '+fmtKm(dist):'📍 Distanza: attiva posizione'}</span>
+        </div>
+        <p class="ddesc">${b.d}</p>
+        <div class="specs">
+          <div class="spec"><div class="k">Tipo di costa</div><div class="v">${T[b.t]}</div></div>
+          <div class="spec"><div class="k">Mare</div><div class="v">${b.mare}</div></div>
+          <div class="spec"><div class="k">Accesso</div><div class="v">${b.acc}</div></div>
+          <div class="spec"><div class="k">Affollamento</div><div class="v">${b.aff}</div></div>
+          <div class="spec"><div class="k">Ombra</div><div class="v">${sh.type}</div></div>
+          <div class="spec"><div class="k">Parcheggio</div><div class="v">${park}</div></div>
+        </div>
+      </div>
+      
+      <div class="dcard">
+        <div class="drow" style="margin-top:0"><div class="lab">👶 A misura di bimbi</div>
+          <div class="fscore">${"★".repeat(fam.score)}${"☆".repeat(5-fam.score)}<span>${fam.kid?"consigliata con bambini piccoli":"valuta in base all'età"}</span></div>
+          <div class="feats">
+            <span class="feat ${fam.sand?'ok':'no'}">${fam.sand?'✓':'✗'} Sabbia</span>
+            <span class="feat ${fam.shallow?'ok':'no'}">${fam.shallow?'✓':'✗'} Acqua bassa/calma</span>
+            <span class="feat ${fam.shade?'ok':'no'}">${fam.shade?'✓':'✗'} Ombra</span>
+            <span class="feat ${fam.stroller?'ok':'no'}">${fam.stroller?'✓':'✗'} Passeggino</span>
+            <span class="feat ${fam.park?'ok':'no'}">${fam.park?'✓':'✗'} Parcheggio vicino</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="dcard">
+        <div class="drow" style="margin-top:0"><div class="lab">Ideale per</div><div class="feats">${b.id.map(x=>`<span class="feat">${x}</span>`).join("")}</div></div>
+        <div class="drow" style="margin-top:16px"><div class="lab">Servizi</div><div class="feats">${b.sv.map(x=>`<span class="feat">${x}</span>`).join("")}</div></div>
+        <div class="drow" style="margin-top:16px"><div class="lab">ℹ️ Info utili</div><ul class="tips">${tips(b).map(x=>`<li>${x}</li>`).join("")}</ul></div>
+      </div>
+      
+      <div class="dcard">
+        <div class="near" id="near" style="margin-top:0"><div class="lab">🍹 Bar e lidi nei paraggi</div><div class="list" id="nearlist"><div class="skeleton skele-card"></div><div class="skeleton skele-card"></div></div>
+          <div class="links"><a href="${lidoLink}" target="_blank" rel="noopener">⛱️ Tutti i lidi</a><a href="${barLink}" target="_blank" rel="noopener">🍸 Tutti i bar</a></div></div>
+        <div class="near" id="nearkids" style="margin-top:16px"><div class="lab">👶 Utili con bambini</div><div class="list" id="kidslist"><div class="skeleton skele-card"></div><div class="skeleton skele-card"></div></div></div>
+      </div>
+      
+      <div class="dcard" id="wikiCard">
+        <div class="wikiload" id="wikiload" style="margin-top:0"><div class="skeleton skele-text"></div><div class="skeleton skele-text"></div><div class="skeleton skele-text short"></div></div>
+        <div class="wiki" id="wikibox" style="margin-top:0; border:0; background:transparent; padding:0; display:block"><h4>📖 Approfondimento</h4><p id="wikitext"></p><a id="wikilink" href="#" target="_blank" rel="noopener">Continua su Wikipedia →</a></div>
+      </div>
+      
+      <div class="actions"><a class="act primary" href="${gmaps}" target="_blank" rel="noopener">🧭 Indicazioni</a>
+        <a class="act sec" href="${photos}" target="_blank" rel="noopener">📷 Foto</a>
+        <a class="act ter" href="${sat}" target="_blank" rel="noopener">🛰️ Satellite</a>
+        <button class="act share" id="shareBeachBtn" type="button">🔗 Condividi</button></div></div>`;
   detail.classList.add("open");app.classList.add("detailing");
   if(isMobile())setSheet("full");
   const favh=document.getElementById("favh");if(favh)favh.onclick=()=>{toggleFav(b);favh.textContent=isFav(b)?"❤️":"🤍";favh.setAttribute("aria-label",isFav(b)?"Rimuovi dai preferiti":"Aggiungi ai preferiti");renderList();};
@@ -556,11 +580,29 @@ window.openDetail=function(i){
   });
   // APPROFONDIMENTO + (foto solo da articolo dedicato verificato)
   loadInfo(b).then(d=>{
-    if(selected!==token)return;const load=document.getElementById("wikiload");
+    if(selected!==token)return;
+    const load=document.getElementById("wikiload");
+    const wikiCard=document.getElementById("wikiCard");
     if(!heroLocked&&d&&d.img&&!d.isComune&&WIKI[b.n]){setHero(d.img,d.url,"© Wikimedia Commons");heroLocked=true;}
-    if(d&&d.extract&&d.extract.length>40){const box=document.getElementById("wikibox");if(box){document.getElementById("wikitext").textContent=d.extract;const lk=document.getElementById("wikilink");if(d.url&&lk)lk.href=d.url;else if(lk)lk.style.display="none";box.classList.add("show");}}
-    if(load)load.textContent="";
+    if(d&&d.extract&&d.extract.length>40){
+      const box=document.getElementById("wikibox");
+      if(box){
+        document.getElementById("wikitext").textContent=d.extract;
+        const lk=document.getElementById("wikilink");
+        if(d.url&&lk)lk.href=d.url;
+        else if(lk)lk.style.display="none";
+        box.classList.add("show");
+        if(wikiCard) wikiCard.style.display = "block";
+      }
+    } else {
+      if(wikiCard) wikiCard.style.display = "none";
+    }
+    if(load) load.style.display = "none";
   });
+  if(!WIKI[b.n]){
+    const wCard = document.getElementById("wikiCard");
+    if(wCard) wCard.style.display = "none";
+  }
   // BAR / LIDI nei dintorni (OpenStreetMap)
   nearbyPOI(b.mlat,b.mlng).then(res=>{
     if(selected!==token)return;
